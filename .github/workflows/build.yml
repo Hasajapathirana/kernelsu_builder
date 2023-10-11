@@ -52,6 +52,7 @@ jobs:
              curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
              repo init -u $MANIFEST --depth=1
              repo sync -c  -j700 --force-sync --no-clone-bundle --no-tags
+             make menuconfig
              make -j$(nproc --all) O=out ARCH=${{ env.TARGET_ARCH }} CC=clang CROSS_COMPILE=aarch64-linux-gnu- ${{ env.BUILD_EXTRA_COMMAND }}
              name: Building Kernel-SU
              
