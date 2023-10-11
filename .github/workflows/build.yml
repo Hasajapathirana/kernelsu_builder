@@ -1,36 +1,67 @@
-# This is a basic workflow to help you get started with Actions
+name: Building Kernel-SU
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
+#  release:
+#    types: [published]
+#  push:
+#    branches:
+#      - master
+#    paths:
+#      - '.config'
+#  schedule:
+#    - cron: 0 8 * * 5
+#  tested on android 8.1
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+env:
+  MANIFEST: https://android.googlesource.com/kernel/manifest
+  DEVICE: p3s
+  DT_LINK: https://github.com/Exy2100-LOS/android_kernel_samsung_p3s.git -b lineage-20
+  DT_PATH: android_kernel_samsung_p3s
+  TZ: Europe/London
+
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
+    
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+       - name: Checkout
+         uses: actions/checkout@master
+         
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+       - name: remove pkg and setting repo
+         run: |
+            sudo apt update && sudo apt install git
+            git clone https://github.com/SA-17/rm_pkg pkg && cd pkg && bash setup.sh
+            cd .. && sudo -E apt-get -qq update
+            sudo -E apt-get -qq install bc build-essential tar zip curl libstdc++6 git wget python3 gcc clang libssl-dev rsync flex curl  bison aria2
+            sudo rm -rf /opt/*
+            sudo apt update
+            sudo curl --create-dirs -L -o /usr/local/bin/repo -O -L https://storage.googleapis.com/git-repo-downloads/repo
+            sudo chmod a+rx /usr/local/bin/repo
+            sudo apt install zip
+  
+       - name: Sync recovery source and device tree
+         run: |
+             mkdir work
+             cd work
+             sudo su
+             git clone $DT_LINK --depth=1 --single-branch $DT_PATH
+             curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
+             repo init -u $MANIFEST --depth=1
+             repo sync -c  -j700 --force-sync --no-clone-bundle --no-tags
+             make -j$(nproc --all) O=out ARCH=${{ env.TARGET_ARCH }} CC=clang CROSS_COMPILE=aarch64-linux-gnu- ${{ env.BUILD_EXTRA_COMMAND }}
+             
+             
+       - name: Build
+         run: |
+              cd work
+               make -j$(nproc --all) O=out ARCH=${{ env.TARGET_ARCH }} CC=clang CROSS_COMPILE=aarch64-linux-gnu- ${{ env.BUILD_EXTRA_COMMAND }}
+                                      
+       - name: Save
+         uses: actions/upload-artifact@v2
+         with:
+            name: recovery.zip
+            path: /home/runner/work/kernelsu_builder/kernelsu_builder/work/
+            retention-days: 31
