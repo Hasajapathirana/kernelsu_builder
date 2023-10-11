@@ -48,6 +48,7 @@ jobs:
              cd work
              sudo su
              git clone $DT_LINK --depth=1 --single-branch $DT_PATH
+             cd $DT_PATH
              curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
              repo init -u $MANIFEST --depth=1
              repo sync -c  -j700 --force-sync --no-clone-bundle --no-tags
@@ -57,7 +58,8 @@ jobs:
        - name: Build
          run: |
               cd work
-               make -j$(nproc --all) O=out ARCH=${{ env.TARGET_ARCH }} CC=clang CROSS_COMPILE=aarch64-linux-gnu- ${{ env.BUILD_EXTRA_COMMAND }}
+              cd $DT_PATH
+              make -j$(nproc --all) O=out ARCH=${{ env.TARGET_ARCH }} CC=clang CROSS_COMPILE=aarch64-linux-gnu- ${{ env.BUILD_EXTRA_COMMAND }}
                                       
        - name: Save
          uses: actions/upload-artifact@v2
