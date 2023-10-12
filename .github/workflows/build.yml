@@ -53,7 +53,7 @@ jobs:
              repo init -u $MANIFEST --depth=1
              repo sync -c  -j700 --force-sync --no-clone-bundle --no-tags
              make menuconfig
-             make -j$(nproc --all) O=out ARCH=${{ env.TARGET_ARCH }} CC=clang CROSS_COMPILE=aarch64-linux-gnu- ${{ env.BUILD_EXTRA_COMMAND }}
+             tools/bazel build --config=fast //common:kernel_aarch64_dist
              name: Building Kernel-SU
              
        - name: Save
