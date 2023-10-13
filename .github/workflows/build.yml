@@ -16,8 +16,8 @@ on:
 env:
   MANIFEST: https://android.googlesource.com/kernel/manifest
   DEVICE: p3s
-  DT_LINK: https://github.com/Exy2100-LOS/android_kernel_samsung_p3s.git -b lineage-20
-  DT_PATH: android_kernel_samsung_p3s
+  DT_LINK: https://github.com/mohammad92/android_kernel_samsung_exynos2100.git -b EWAF
+  DT_PATH: android_kernel_samsung_exynos2100
   TZ: Europe/London
 
 jobs:
