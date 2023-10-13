@@ -47,14 +47,13 @@ jobs:
              mkdir work
              cd work
              sudo su
-             git clone $DT_LINK --depth=1 --single-branch $DT_PATH
-             cd $DT_PATH
-             curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
              repo init -u $MANIFEST --depth=1
              repo sync -c  -j700 --force-sync --no-clone-bundle --no-tags
+             git clone $DT_LINK --depth=1 --single-branch $DT_PATH
+             curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
              make menuconfig
              tools/bazel build --config=fast //common:kernel_aarch64_dist
-             name: Building Kernel-SU
+
              
        - name: Save
          uses: actions/upload-artifact@v2
