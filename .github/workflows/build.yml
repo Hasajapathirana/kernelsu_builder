@@ -16,8 +16,8 @@ on:
 env:
   MANIFEST: https://android.googlesource.com/kernel/manifest
   DEVICE: p3s
-  DT_LINK: https://github.com/mohammad92/android_kernel_samsung_exynos2100.git -b EWAF
-  DT_PATH: android_kernel_samsung_exynos2100
+  DT_LINK: https://github.com/Exy2100-LOS/android_kernel_samsung_p3s.git -b lineage-20
+  DT_PATH: android_kernel_samsung_p3s
   TZ: Europe/London
 
 jobs:
@@ -51,6 +51,7 @@ jobs:
              repo sync -c  -j700 --force-sync --no-clone-bundle --no-tags
              git clone $DT_LINK --depth=1 --single-branch $DT_PATH
              curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
+             ls
              tools/bazel build --config=fast //common:kernel_aarch64_dist 
 
              
