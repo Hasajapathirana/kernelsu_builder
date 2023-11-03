@@ -16,8 +16,8 @@ on:
 env:
   MANIFEST: https://android.googlesource.com/kernel/manifest
   DEVICE: p3s
-  DT_LINK: https://github.com/Exy2100-LOS/android_kernel_samsung_universal2100-common.git -b lineage-20
-  DT_PATH: android_kernel_samsung_universal2100-common
+  DT_LINK: https://github.com/Exy2100-LOS/android_kernel_samsung_universal2100 -b EWH5
+  DT_PATH: android_kernel_samsung_universal2100
   TZ: Europe/London
 
 jobs:
