@@ -16,8 +16,8 @@ on:
 env:
   MANIFEST: https://android.googlesource.com/kernel/manifest
   DEVICE: p3s
-  DT_LINK: https://github.com/Exy2100-LOS/android_kernel_samsung_p3s.git -b lineage-20
-  DT_PATH: android_kernel_samsung_p3s
+  DT_LINK: https://github.com/Exy2100-LOS/android_kernel_samsung_universal2100-common.git -b lineage-20
+  DT_PATH: android_kernel_samsung_universal2100-common
   TZ: Europe/London
 
 jobs:
@@ -51,6 +51,13 @@ jobs:
              repo sync -c  -j700 --force-sync --no-clone-bundle --no-tags
              git clone $DT_LINK --depth=1 --single-branch $DT_PATH
              curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
+            
+
+       - name: Making the kernel su supported and building
+         run: |
+             cd work 
+             cd $DT_PATH 
+             curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
              ls
              tools/bazel build --config=fast //common:kernel_aarch64_dist 
 
@@ -58,6 +65,6 @@ jobs:
        - name: Save
          uses: actions/upload-artifact@v2
          with:
-            name: recovery.zip
+            name: kernel.zip
             path: /home/runner/work/kernelsu_builder/kernelsu_builder/work/out/
             retention-days: 31
