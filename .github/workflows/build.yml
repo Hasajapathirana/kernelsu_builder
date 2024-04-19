@@ -1,23 +1,13 @@
 name: Building Kernel-SU
 
 on:
-#  release:
-#    types: [published]
-#  push:
-#    branches:
-#      - master
-#    paths:
-#      - '.config'
-#  schedule:
-#    - cron: 0 8 * * 5
-#  tested on android 8.1
   workflow_dispatch:
 
 env:
   MANIFEST: https://android.googlesource.com/kernel/manifest
   DEVICE: p3s
-  DT_LINK: https://github.com/Exy2100-LOS/android_kernel_samsung_p3s -b lineage-20
-  DT_PATH: android_kernel_samsung_p3s
+  DT_LINK: https://github.com/Hasajapathirana/android_kernel_samsung_exynos2100.git
+  DT_PATH: kernel/samsung/exynos2100
   TZ: Europe/London
 
 jobs:
@@ -50,7 +40,6 @@ jobs:
              repo init -u $MANIFEST --depth=1
              repo sync -c  -j700 --force-sync --no-clone-bundle --no-tags
              git clone $DT_LINK --depth=1 --single-branch $DT_PATH
-             curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
             
 
        - name: Making the kernel su supported and building
@@ -61,7 +50,11 @@ jobs:
              ls
              cd $out
              cd work
-             tools/bazel build --config=fast //common:kernel_aarch64_dist 
+             git clone https://github.com/kdrag0n/proton-clang.git
+             export PATH="$HOME/toolchains/proton-clang/bin:$PATH"
+             clang -v
+             make O=out arch=arm64 CC=clang exynos2100-p3sxxx_defconfig
+             make O=out arch=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- 
 
              
        - name: Save
