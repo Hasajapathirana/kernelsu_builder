@@ -54,8 +54,7 @@ jobs:
              git clone https://github.com/kdrag0n/proton-clang.git --depth=1
              export PATH="$HOME/toolchains/proton-clang/bin:$PATH"
              clang -v
-             make O=out arch=arm64 CC=clang exynos2100-p3sxxx_defconfig
-             make O=out arch=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- 
+             LTO=thin BUILD_CONFIG=common/build.config.gki.aarch64 build/build.sh
 
              
        - name: Save
