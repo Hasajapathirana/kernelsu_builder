@@ -48,7 +48,7 @@ jobs:
              echo "Adding KernelSU"
              cd $DT_PATH 
              curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
-             echo "Finished Adding KernelSU
+             echo "Finished Adding KernelSU"
              cd $out
              cd work
              git clone https://github.com/kdrag0n/proton-clang.git
