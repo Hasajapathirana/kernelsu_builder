@@ -59,7 +59,7 @@ jobs:
 
              
        - name: Save
-         uses: actions/upload-artifact@v2
+         uses: actions/upload-artifact@v3
          with:
             name: kernel.zip
             path: /home/runner/work/kernelsu_builder/kernelsu_builder/work/out/
