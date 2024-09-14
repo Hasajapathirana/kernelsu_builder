@@ -51,7 +51,7 @@ jobs:
              echo "Finished Adding KernelSU"
              cd $out
              cd work
-             git clone https://github.com/kdrag0n/proton-clang.git
+             git clone https://github.com/kdrag0n/proton-clang.git --depth=1
              export PATH="$HOME/toolchains/proton-clang/bin:$PATH"
              clang -v
              make O=out arch=arm64 CC=clang exynos2100-p3sxxx_defconfig
