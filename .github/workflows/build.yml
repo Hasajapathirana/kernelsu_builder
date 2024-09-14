@@ -6,8 +6,8 @@ on:
 env:
   MANIFEST: https://android.googlesource.com/kernel/manifest
   DEVICE: p3s
-  DT_LINK: https://github.com/Hasajapathirana/android_kernel_samsung_exynos2100.git
-  DT_PATH: kernel/samsung/exynos2100
+  DT_LINK: https://github.com/Exynos2100-common/android_kernel_samsung_universal2100.git
+  DT_PATH: kernel/samsung/universal2100-common
   TZ: Europe/London
 
 jobs:
@@ -42,12 +42,13 @@ jobs:
              git clone $DT_LINK --depth=1 --single-branch $DT_PATH
             
 
-       - name: Making the kernel su supported and building
+       - name: Adding Support to kernel su supported and building
          run: |
              cd work 
+             echo "Adding KernelSU"
              cd $DT_PATH 
              curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
-             ls
+             echo "Finished Adding KernelSU
              cd $out
              cd work
              git clone https://github.com/kdrag0n/proton-clang.git
