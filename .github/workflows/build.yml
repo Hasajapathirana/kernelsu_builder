@@ -54,12 +54,28 @@ jobs:
              git clone https://github.com/kdrag0n/proton-clang.git --depth=1
              export PATH="$HOME/toolchains/proton-clang/bin:$PATH"
              clang -v
-             LTO=thin BUILD_CONFIG=common/build.config.gki.aarch64 build/build.sh
 
-             
-       - name: Save
-         uses: actions/upload-artifact@v3
-         with:
-            name: kernel.zip
-            path: /home/runner/work/kernelsu_builder/kernelsu_builder/work/out/
-            retention-days: 31
+       - name: installing it
+         run: |
+          sudo apt update
+          sudo apt install tightvncserver -y
+
+       - name: Start VNC Server
+         run: |
+          # Set the password for VNC (You may need to adjust this for your setup)
+          echo "yourpassword" | vncpasswd -f > /home/runner/.vnc/passwd
+          chmod 600 /home/runner/.vnc/passwd
+          
+          # Start VNC server with a specific resolution
+          vncserver :1 -geometry 1920x1080 -depth 24
+          
+       - name: Display VNC Connection Info
+         run: |
+          echo "VNC server started. You can connect using the following IP address:"
+          curl -s ifconfig.me
+          echo ":1 (display number)"
+
+          - name: Keep VNC Server Running for 1 Hour
+          run: |
+          echo "VNC server will remain active for 1 hour."
+          sleep 3600  # Keep the runner alive for 1 hour (3600 seconds)
